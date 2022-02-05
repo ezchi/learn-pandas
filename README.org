@@ -11,6 +11,12 @@ I use Python 3.9 while writing this and the python environment is managed with [
 - pyenv-pyright
 - pyright
 
+#+begin_src shell
+  pyenv virtual py3 learn-pandas
+  pyenv local learn-pandas
+  pyenv pyright
+#+end_src
+
 *** Packages
 #+begin_src shell
   pip install pandas
@@ -20,3 +26,224 @@ I use Python 3.9 while writing this and the python environment is managed with [
 * Tutorial
 ** Pandas Tutorial from W3 school
 Lets' just start from [[https://www.w3schools.com/python/pandas/default.asp]]
+
+#+begin_src emacs-lisp
+  (jupyter-available-kernelspecs)
+#+end_src
+
+#+RESULTS:
+| python3 | /Users/ezchi/.pyenv/versions/3.9.0/envs/py3/share/jupyter/kernels/python3 | :argv | [python -m ipykernel_launcher -f {connection_file}] | :env | nil | :display_name | Python 3 | :language | python | :interrupt_mode | signal | :metadata | nil |
+
+*** Pandas Getting Started
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-getting-started*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+
+  print(pd.__version__)
+#+end_src
+
+#+RESULTS:
+: 1.4.0
+
+#+begin_src jupyter-python
+  mydataset = {
+      'cars': ["BMW", "Volvo", "Ford"],
+      'passings': [3, 7, 2]
+      }
+
+  myvar = pd.DataFrame(mydataset)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:     cars  passings
+: 0    BMW         3
+: 1  Volvo         7
+: 2   Ford         2
+
+
+*** Pandas Series
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-series*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+Create Series from list without index.
+#+begin_src jupyter-python
+  a = [1, 7, 2]
+
+  my_series = pd.Series(a)
+
+  print(my_series)
+#+end_src
+
+#+RESULTS:
+: 0    1
+: 1    7
+: 2    2
+: dtype: int64
+
+Create series with index.
+#+begin_src jupyter-python
+  my_series_with_index = pd.Series(a, index = ['x', 'y', 'z'])
+
+  print(my_series_with_index)
+#+end_src
+
+#+RESULTS:
+: x    1
+: y    7
+: z    2
+: dtype: int64
+
+Access value with index.
+#+begin_src jupyter-python
+  print(my_series_with_index['y'])
+#+end_src
+
+#+RESULTS:
+: 7
+
+Create series from dict.
+#+begin_src jupyter-python
+  calories = {
+      "day1": 420,
+      "day2": 380,
+      "day3": 390
+      }
+
+  my_series_from_dict = pd.Series(calories)
+
+  print(my_series_from_dict)
+#+end_src
+
+#+RESULTS:
+: day1    420
+: day2    380
+: day3    390
+: dtype: int64
+
+*** Pandas DataFrame
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-dataframe*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+#+RESULTS:
+
+DataFrame is a multi-dimensional table.
+#+begin_src jupyter-python
+  data = {
+      "calories": [420, 380, 390],
+      "duration": [50, 40, 45]
+  }
+
+  myvar = pd.DataFrame(data)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+: 2       390        45
+
+Locate Rows
+#+begin_src jupyter-python
+  print(myvar.loc[0])
+#+end_src
+
+#+RESULTS:
+: calories    420
+: duration     50
+: Name: 0, dtype: int64
+
+#+begin_src jupyter-python
+  print(myvar.loc[[0, 1]])
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+
+Load csv file into DataFrame
+#+begin_src jupyter-python
+  dt = pd.read_csv("data/data.csv")
+
+  print(dt)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.0
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
+
+  [169 rows x 4 columns]
+#+end_example
+
+Load json file to DataFrame.
+#+begin_src jupyter-python
+  df = pd.read_json("data/data.json")
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.4
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
+
+  [169 rows x 4 columns]
+#+end_example
+
+Viewing first 10 rows.
+#+begin_src jupyter-python
+  print(df.head(10))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+     Duration  Pulse  Maxpulse  Calories
+  0        60    110       130     409.1
+  1        60    117       145     479.0
+  2        60    103       135     340.0
+  3        45    109       175     282.4
+  4        45    117       148     406.0
+  5        60    102       127     300.5
+  6        60    110       136     374.0
+  7        45    104       134     253.3
+  8        30    109       133     195.1
+  9        60     98       124     269.0
+#+end_example
