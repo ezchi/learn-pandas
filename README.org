@@ -11,12 +11,681 @@ I use Python 3.9 while writing this and the python environment is managed with [
 - pyenv-pyright
 - pyright
 
+#+begin_src shell
+  pyenv virtual py3 learn-pandas
+  pyenv local learn-pandas
+  pyenv pyright
+#+end_src
+
 *** Packages
 #+begin_src shell
   pip install pandas
   pip install jupyter
+  pip install matplotlib
 #+end_src
 
 * Tutorial
 ** Pandas Tutorial from W3 school
+:PROPERTIES:
+:header-args:jupyter-python+: :display plain
+:END:
 Lets' just start from [[https://www.w3schools.com/python/pandas/default.asp]]
+
+#+begin_src emacs-lisp
+  (jupyter-available-kernelspecs)
+#+end_src
+
+#+RESULTS:
+| python3 | /Users/ezchi/.pyenv/versions/3.9.0/envs/py3/share/jupyter/kernels/python3 | :argv | [python -m ipykernel_launcher -f {connection_file}] | :env | nil | :display_name | Python 3 | :language | python | :interrupt_mode | signal | :metadata | nil |
+
+*** Pandas Getting Started
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-getting-started*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+
+  print(pd.__version__)
+#+end_src
+
+#+RESULTS:
+: 1.4.0
+
+#+begin_src jupyter-python
+  mydataset = {
+      'cars': ["BMW", "Volvo", "Ford"],
+      'passings': [3, 7, 2]
+      }
+
+  myvar = pd.DataFrame(mydataset)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:     cars  passings
+: 0    BMW         3
+: 1  Volvo         7
+: 2   Ford         2
+
+
+*** Pandas Series
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-series*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+Create Series from list without index.
+#+begin_src jupyter-python
+  a = [1, 7, 2]
+
+  my_series = pd.Series(a)
+
+  print(my_series)
+#+end_src
+
+#+RESULTS:
+: 0    1
+: 1    7
+: 2    2
+: dtype: int64
+
+Create series with index.
+#+begin_src jupyter-python
+  my_series_with_index = pd.Series(a, index = ['x', 'y', 'z'])
+
+  print(my_series_with_index)
+#+end_src
+
+#+RESULTS:
+: x    1
+: y    7
+: z    2
+: dtype: int64
+
+Access value with index.
+#+begin_src jupyter-python
+  print(my_series_with_index['y'])
+#+end_src
+
+#+RESULTS:
+: 7
+
+Create series from dict.
+#+begin_src jupyter-python
+  calories = {
+      "day1": 420,
+      "day2": 380,
+      "day3": 390
+      }
+
+  my_series_from_dict = pd.Series(calories)
+
+  print(my_series_from_dict)
+#+end_src
+
+#+RESULTS:
+: day1    420
+: day2    380
+: day3    390
+: dtype: int64
+
+*** Pandas DataFrame
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-dataframe*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+#+RESULTS:
+
+DataFrame is a multi-dimensional table.
+#+begin_src jupyter-python
+  data = {
+      "calories": [420, 380, 390],
+      "duration": [50, 40, 45]
+  }
+
+  myvar = pd.DataFrame(data)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+: 2       390        45
+
+Locate Rows
+#+begin_src jupyter-python
+  print(myvar.loc[0])
+#+end_src
+
+#+RESULTS:
+: calories    420
+: duration     50
+: Name: 0, dtype: int64
+
+#+begin_src jupyter-python
+  print(myvar.loc[[0, 1]])
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+
+Load csv file into DataFrame
+#+begin_src jupyter-python
+  dt = pd.read_csv("data/data.csv")
+
+  print(dt)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.0
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
+
+  [169 rows x 4 columns]
+#+end_example
+
+Load json file to DataFrame.
+#+begin_src jupyter-python
+  df = pd.read_json("data/data.json")
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.4
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
+
+  [169 rows x 4 columns]
+#+end_example
+
+Viewing first 10 rows.
+#+begin_src jupyter-python
+  print(df.head(10))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+     Duration  Pulse  Maxpulse  Calories
+  0        60    110       130     409.1
+  1        60    117       145     479.0
+  2        60    103       135     340.0
+  3        45    109       175     282.4
+  4        45    117       148     406.0
+  5        60    102       127     300.5
+  6        60    110       136     374.0
+  7        45    104       134     253.3
+  8        30    109       133     195.1
+  9        60     98       124     269.0
+#+end_example
+
+*** Cleaning Data
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-cleaning-data*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+
+  df = pd.read_csv("data/dirtydata.csv")
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  18        45  '2020/12/18'     90       112       NaN
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  22        45           NaN    100       119     282.0
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  28        60  '2020/12/28'    103       132       NaN
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+#+end_example
+
+Remove rows with empty cells
+#+begin_src jupyter-python
+  new_df = df.dropna()
+
+  print(new_df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+#+end_example
+
+Remove rows with empty cells on the original DataFrame with =inplace = True=.
+#+begin_src jupyter-python
+  df.dropna(inplace=True)
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+#+end_example
+
+Fix wrong data format as show in row 26
+#+begin_src jupyter-python
+  print(df.loc[26])
+#+end_src
+
+#+RESULTS:
+: Duration          60
+: Date        20201226
+: Pulse            100
+: Maxpulse         120
+: Calories       250.0
+: Name: 26, dtype: object
+
+#+begin_src jupyter-python
+  df['Date'] = pd.to_datetime(df['Date'])
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration       Date  Pulse  Maxpulse  Calories
+  0         60 2020-12-01    110       130     409.1
+  1         60 2020-12-02    117       145     479.0
+  2         60 2020-12-03    103       135     340.0
+  3         45 2020-12-04    109       175     282.4
+  4         45 2020-12-05    117       148     406.0
+  5         60 2020-12-06    102       127     300.0
+  6         60 2020-12-07    110       136     374.0
+  7        450 2020-12-08    104       134     253.3
+  8         30 2020-12-09    109       133     195.1
+  9         60 2020-12-10     98       124     269.0
+  10        60 2020-12-11    103       147     329.3
+  11        60 2020-12-12    100       120     250.7
+  12        60 2020-12-12    100       120     250.7
+  13        60 2020-12-13    106       128     345.3
+  14        60 2020-12-14    104       132     379.3
+  15        60 2020-12-15     98       123     275.0
+  16        60 2020-12-16     98       120     215.2
+  17        60 2020-12-17    100       120     300.0
+  19        60 2020-12-19    103       123     323.0
+  20        45 2020-12-20     97       125     243.0
+  21        60 2020-12-21    108       131     364.2
+  23        60 2020-12-23    130       101     300.0
+  24        45 2020-12-24    105       132     246.0
+  25        60 2020-12-25    102       126     334.5
+  26        60 2020-12-26    100       120     250.0
+  27        60 2020-12-27     92       118     241.0
+  29        60 2020-12-29    100       132     280.0
+  30        60 2020-12-30    102       129     380.3
+  31        60 2020-12-31     92       115     243.0
+#+end_example
+
+Remove rows with wrong data.
+#+begin_src jupyter-python
+  for x in df.index:
+      if df.loc[x, "Duration"] > 120:
+          df.drop(x, inplace=True)
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration       Date  Pulse  Maxpulse  Calories
+  0         60 2020-12-01    110       130     409.1
+  1         60 2020-12-02    117       145     479.0
+  2         60 2020-12-03    103       135     340.0
+  3         45 2020-12-04    109       175     282.4
+  4         45 2020-12-05    117       148     406.0
+  5         60 2020-12-06    102       127     300.0
+  6         60 2020-12-07    110       136     374.0
+  8         30 2020-12-09    109       133     195.1
+  9         60 2020-12-10     98       124     269.0
+  10        60 2020-12-11    103       147     329.3
+  11        60 2020-12-12    100       120     250.7
+  12        60 2020-12-12    100       120     250.7
+  13        60 2020-12-13    106       128     345.3
+  14        60 2020-12-14    104       132     379.3
+  15        60 2020-12-15     98       123     275.0
+  16        60 2020-12-16     98       120     215.2
+  17        60 2020-12-17    100       120     300.0
+  19        60 2020-12-19    103       123     323.0
+  20        45 2020-12-20     97       125     243.0
+  21        60 2020-12-21    108       131     364.2
+  23        60 2020-12-23    130       101     300.0
+  24        45 2020-12-24    105       132     246.0
+  25        60 2020-12-25    102       126     334.5
+  26        60 2020-12-26    100       120     250.0
+  27        60 2020-12-27     92       118     241.0
+  29        60 2020-12-29    100       132     280.0
+  30        60 2020-12-30    102       129     380.3
+  31        60 2020-12-31     92       115     243.0
+#+end_example
+
+Discovering duplicated data.
+#+begin_src jupyter-python
+  print(df.duplicated())
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  0     False
+  1     False
+  2     False
+  3     False
+  4     False
+  5     False
+  6     False
+  8     False
+  9     False
+  10    False
+  11    False
+  12     True
+  13    False
+  14    False
+  15    False
+  16    False
+  17    False
+  19    False
+  20    False
+  21    False
+  23    False
+  24    False
+  25    False
+  26    False
+  27    False
+  29    False
+  30    False
+  31    False
+  dtype: bool
+#+end_example
+
+Remove duplicated data.
+#+begin_src jupyter-python
+  df.drop_duplicates(inplace=True)
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration       Date  Pulse  Maxpulse  Calories
+  0         60 2020-12-01    110       130     409.1
+  1         60 2020-12-02    117       145     479.0
+  2         60 2020-12-03    103       135     340.0
+  3         45 2020-12-04    109       175     282.4
+  4         45 2020-12-05    117       148     406.0
+  5         60 2020-12-06    102       127     300.0
+  6         60 2020-12-07    110       136     374.0
+  8         30 2020-12-09    109       133     195.1
+  9         60 2020-12-10     98       124     269.0
+  10        60 2020-12-11    103       147     329.3
+  11        60 2020-12-12    100       120     250.7
+  13        60 2020-12-13    106       128     345.3
+  14        60 2020-12-14    104       132     379.3
+  15        60 2020-12-15     98       123     275.0
+  16        60 2020-12-16     98       120     215.2
+  17        60 2020-12-17    100       120     300.0
+  19        60 2020-12-19    103       123     323.0
+  20        45 2020-12-20     97       125     243.0
+  21        60 2020-12-21    108       131     364.2
+  23        60 2020-12-23    130       101     300.0
+  24        45 2020-12-24    105       132     246.0
+  25        60 2020-12-25    102       126     334.5
+  26        60 2020-12-26    100       120     250.0
+  27        60 2020-12-27     92       118     241.0
+  29        60 2020-12-29    100       132     280.0
+  30        60 2020-12-30    102       129     380.3
+  31        60 2020-12-31     92       115     243.0
+#+end_example
+
+*** Data Correlations
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-data-correlations*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+
+  df = pd.read_csv("data/dirtydata.csv")
+
+  df.dropna(inplace=True)
+
+  df['Date'] = pd.to_datetime(df['Date'])
+
+  for x in df.index:
+      if df.loc[x, "Duration"] > 120:
+          df.drop(x, inplace=True)
+
+  print(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Duration       Date  Pulse  Maxpulse  Calories
+  0         60 2020-12-01    110       130     409.1
+  1         60 2020-12-02    117       145     479.0
+  2         60 2020-12-03    103       135     340.0
+  3         45 2020-12-04    109       175     282.4
+  4         45 2020-12-05    117       148     406.0
+  5         60 2020-12-06    102       127     300.0
+  6         60 2020-12-07    110       136     374.0
+  8         30 2020-12-09    109       133     195.1
+  9         60 2020-12-10     98       124     269.0
+  10        60 2020-12-11    103       147     329.3
+  11        60 2020-12-12    100       120     250.7
+  12        60 2020-12-12    100       120     250.7
+  13        60 2020-12-13    106       128     345.3
+  14        60 2020-12-14    104       132     379.3
+  15        60 2020-12-15     98       123     275.0
+  16        60 2020-12-16     98       120     215.2
+  17        60 2020-12-17    100       120     300.0
+  19        60 2020-12-19    103       123     323.0
+  20        45 2020-12-20     97       125     243.0
+  21        60 2020-12-21    108       131     364.2
+  23        60 2020-12-23    130       101     300.0
+  24        45 2020-12-24    105       132     246.0
+  25        60 2020-12-25    102       126     334.5
+  26        60 2020-12-26    100       120     250.0
+  27        60 2020-12-27     92       118     241.0
+  29        60 2020-12-29    100       132     280.0
+  30        60 2020-12-30    102       129     380.3
+  31        60 2020-12-31     92       115     243.0
+#+end_example
+
+Finding relationships
+#+begin_src jupyter-python
+  print(df.corr())
+#+end_src
+
+#+RESULTS:
+:           Duration     Pulse  Maxpulse  Calories
+: Duration  1.000000 -0.200098 -0.396546  0.304108
+: Pulse    -0.200098  1.000000  0.211738  0.515790
+: Maxpulse -0.396546  0.211738  1.000000  0.367878
+: Calories  0.304108  0.515790  0.367878  1.000000
+
+*** Plotting
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-plotting*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  df = pd.read_csv("data/data.csv")
+#+end_src
+
+#+RESULTS:
+
+#+begin_src jupyter-python :display plain
+  df
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.0
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
+
+  [169 rows x 4 columns]
+#+end_example
+
+#+begin_src jupyter-python :display image
+  df.plot()
+
+  plt.show()
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/cfc912c5f04227d085a32fe63d2d4de9036bc995.png]]
+
+Scatter Plot
+#+begin_src jupyter-python :display image
+  df.plot(kind="scatter", x="Duration", y="Calories")
+
+  plt.show()
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/ee7f8c12e6b181136f63b48410e5408bd00ff8b7.png]]
+
+#+begin_src jupyter-python :display image
+  df.plot(kind="scatter", x="Duration", y="Maxpulse")
+  plt.show()
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/f4d62c5ba1a1553f46525dd377075b52fdc35a36.png]]
+
+#+begin_src jupyter-python :display image
+  df["Duration"].plot(kind="hist")
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/9eb4d617a14bad280520525ff7343096905a89c5.png]]
