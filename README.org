@@ -1,0 +1,22 @@
+* Overview
+This is study notes for my learn Pandas journey.
+
+* Environment setup
+I am usign Emacs with [[https://orgmode.org/][Org Mode]] and would try to use Jupyter ([[https://github.com/nnicandro/emacs-jupyter][emacs-jupyter]]) as possible as I can.
+
+** Python
+I use Python 3.9 while writing this and the python environment is managed with [[https://github.com/pyenv/pyenv][pyenv]].
+- pyenv
+- pyenv-virtualenv
+- pyenv-pyright
+- pyright
+
+*** Packages
+#+begin_src shell
+  pip install pandas
+  pip install jupyter
+#+end_src
+
+* Tutorial
+** Pandas Tutorial from W3 school
+Lets' just start from [[https://www.w3schools.com/python/pandas/default.asp]]
