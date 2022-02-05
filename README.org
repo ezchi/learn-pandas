@@ -187,70 +187,63 @@ Load csv file into DataFrame
 
 #+RESULTS:
 #+begin_example
-       Series_reference   Period  Data_value Suppressed STATUS    UNITS  \
-  0       BDCQ.SF1AA2CA  2016.06    1116.386        NaN      F  Dollars
-  1       BDCQ.SF1AA2CA  2016.09    1070.874        NaN      F  Dollars
-  2       BDCQ.SF1AA2CA  2016.12    1054.408        NaN      F  Dollars
-  3       BDCQ.SF1AA2CA  2017.03    1010.665        NaN      F  Dollars
-  4       BDCQ.SF1AA2CA  2017.06    1233.700        NaN      F  Dollars
-  ...               ...      ...         ...        ...    ...      ...
-  5195     BDCQ.SF8RSCA  2020.09     470.454        NaN      F  Dollars
-  5196     BDCQ.SF8RSCA  2020.12     522.330        NaN      F  Dollars
-  5197     BDCQ.SF8RSCA  2021.03     597.997        NaN      F  Dollars
-  5198     BDCQ.SF8RSCA  2021.06     635.931        NaN      F  Dollars
-  5199     BDCQ.SF8RSCA  2021.09     439.138        NaN      F  Dollars
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.0
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
 
-        Magnitude                         Subject  \
-  0             6  Business Data Collection - BDC
-  1             6  Business Data Collection - BDC
-  2             6  Business Data Collection - BDC
-  3             6  Business Data Collection - BDC
-  4             6  Business Data Collection - BDC
-  ...         ...                             ...
-  5195          6  Business Data Collection - BDC
-  5196          6  Business Data Collection - BDC
-  5197          6  Business Data Collection - BDC
-  5198          6  Business Data Collection - BDC
-  5199          6  Business Data Collection - BDC
+  [169 rows x 4 columns]
+#+end_example
 
-                                                  Group  \
-  0     Industry by financial variable (NZSIOC Level 2)
-  1     Industry by financial variable (NZSIOC Level 2)
-  2     Industry by financial variable (NZSIOC Level 2)
-  3     Industry by financial variable (NZSIOC Level 2)
-  4     Industry by financial variable (NZSIOC Level 2)
-  ...                                               ...
-  5195  Industry by financial variable (NZSIOC Level 1)
-  5196  Industry by financial variable (NZSIOC Level 1)
-  5197  Industry by financial variable (NZSIOC Level 1)
-  5198  Industry by financial variable (NZSIOC Level 1)
-  5199  Industry by financial variable (NZSIOC Level 1)
+Load json file to DataFrame.
+#+begin_src jupyter-python
+  df = pd.read_json("data/data.json")
 
-                  Series_title_1                       Series_title_2  \
-  0     Sales (operating income)                 Forestry and Logging
-  1     Sales (operating income)                 Forestry and Logging
-  2     Sales (operating income)                 Forestry and Logging
-  3     Sales (operating income)                 Forestry and Logging
-  4     Sales (operating income)                 Forestry and Logging
-  ...                        ...                                  ...
-  5195          Operating profit  Arts, Recreation and Other Services
-  5196          Operating profit  Arts, Recreation and Other Services
-  5197          Operating profit  Arts, Recreation and Other Services
-  5198          Operating profit  Arts, Recreation and Other Services
-  5199          Operating profit  Arts, Recreation and Other Services
+  print(df)
+#+end_src
 
-        Series_title_3 Series_title_4  Series_title_5
-  0     Current prices     Unadjusted             NaN
-  1     Current prices     Unadjusted             NaN
-  2     Current prices     Unadjusted             NaN
-  3     Current prices     Unadjusted             NaN
-  4     Current prices     Unadjusted             NaN
-  ...              ...            ...             ...
-  5195         Current     Unadjusted             NaN
-  5196         Current     Unadjusted             NaN
-  5197         Current     Unadjusted             NaN
-  5198         Current     Unadjusted             NaN
-  5199         Current     Unadjusted             NaN
+#+RESULTS:
+#+begin_example
+       Duration  Pulse  Maxpulse  Calories
+  0          60    110       130     409.1
+  1          60    117       145     479.0
+  2          60    103       135     340.0
+  3          45    109       175     282.4
+  4          45    117       148     406.0
+  ..        ...    ...       ...       ...
+  164        60    105       140     290.8
+  165        60    110       145     300.4
+  166        60    115       145     310.2
+  167        75    120       150     320.4
+  168        75    125       150     330.4
 
-  [5200 rows x 14 columns]
+  [169 rows x 4 columns]
+#+end_example
+
+Viewing first 10 rows.
+#+begin_src jupyter-python
+  print(df.head(10))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+     Duration  Pulse  Maxpulse  Calories
+  0        60    110       130     409.1
+  1        60    117       145     479.0
+  2        60    103       135     340.0
+  3        45    109       175     282.4
+  4        45    117       148     406.0
+  5        60    102       127     300.5
+  6        60    110       136     374.0
+  7        45    104       134     253.3
+  8        30    109       133     195.1
+  9        60     98       124     269.0
 #+end_example
