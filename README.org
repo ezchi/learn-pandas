@@ -11,6 +11,12 @@ I use Python 3.9 while writing this and the python environment is managed with [
 - pyenv-pyright
 - pyright
 
+#+begin_src shell
+  pyenv virtual py3 learn-pandas
+  pyenv local learn-pandas
+  pyenv pyright
+#+end_src
+
 *** Packages
 #+begin_src shell
   pip install pandas
@@ -20,3 +26,231 @@ I use Python 3.9 while writing this and the python environment is managed with [
 * Tutorial
 ** Pandas Tutorial from W3 school
 Lets' just start from [[https://www.w3schools.com/python/pandas/default.asp]]
+
+#+begin_src emacs-lisp
+  (jupyter-available-kernelspecs)
+#+end_src
+
+#+RESULTS:
+| python3 | /Users/ezchi/.pyenv/versions/3.9.0/envs/py3/share/jupyter/kernels/python3 | :argv | [python -m ipykernel_launcher -f {connection_file}] | :env | nil | :display_name | Python 3 | :language | python | :interrupt_mode | signal | :metadata | nil |
+
+*** Pandas Getting Started
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-getting-started*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+
+  print(pd.__version__)
+#+end_src
+
+#+RESULTS:
+: 1.4.0
+
+#+begin_src jupyter-python
+  mydataset = {
+      'cars': ["BMW", "Volvo", "Ford"],
+      'passings': [3, 7, 2]
+      }
+
+  myvar = pd.DataFrame(mydataset)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:     cars  passings
+: 0    BMW         3
+: 1  Volvo         7
+: 2   Ford         2
+
+
+*** Pandas Series
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-series*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+Create Series from list without index.
+#+begin_src jupyter-python
+  a = [1, 7, 2]
+
+  my_series = pd.Series(a)
+
+  print(my_series)
+#+end_src
+
+#+RESULTS:
+: 0    1
+: 1    7
+: 2    2
+: dtype: int64
+
+Create series with index.
+#+begin_src jupyter-python
+  my_series_with_index = pd.Series(a, index = ['x', 'y', 'z'])
+
+  print(my_series_with_index)
+#+end_src
+
+#+RESULTS:
+: x    1
+: y    7
+: z    2
+: dtype: int64
+
+Access value with index.
+#+begin_src jupyter-python
+  print(my_series_with_index['y'])
+#+end_src
+
+#+RESULTS:
+: 7
+
+Create series from dict.
+#+begin_src jupyter-python
+  calories = {
+      "day1": 420,
+      "day2": 380,
+      "day3": 390
+      }
+
+  my_series_from_dict = pd.Series(calories)
+
+  print(my_series_from_dict)
+#+end_src
+
+#+RESULTS:
+: day1    420
+: day2    380
+: day3    390
+: dtype: int64
+
+*** Pandas DataFrame
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*pandas-dataframe*" :async yes :kernel python3
+:END:
+
+#+begin_src jupyter-python
+  import pandas as pd
+#+end_src
+
+#+RESULTS:
+
+DataFrame is a multi-dimensional table.
+#+begin_src jupyter-python
+  data = {
+      "calories": [420, 380, 390],
+      "duration": [50, 40, 45]
+  }
+
+  myvar = pd.DataFrame(data)
+
+  print(myvar)
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+: 2       390        45
+
+Locate Rows
+#+begin_src jupyter-python
+  print(myvar.loc[0])
+#+end_src
+
+#+RESULTS:
+: calories    420
+: duration     50
+: Name: 0, dtype: int64
+
+#+begin_src jupyter-python
+  print(myvar.loc[[0, 1]])
+#+end_src
+
+#+RESULTS:
+:    calories  duration
+: 0       420        50
+: 1       380        40
+
+Load csv file into DataFrame
+#+begin_src jupyter-python
+  dt = pd.read_csv("data/data.csv")
+
+  print(dt)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Series_reference   Period  Data_value Suppressed STATUS    UNITS  \
+  0       BDCQ.SF1AA2CA  2016.06    1116.386        NaN      F  Dollars
+  1       BDCQ.SF1AA2CA  2016.09    1070.874        NaN      F  Dollars
+  2       BDCQ.SF1AA2CA  2016.12    1054.408        NaN      F  Dollars
+  3       BDCQ.SF1AA2CA  2017.03    1010.665        NaN      F  Dollars
+  4       BDCQ.SF1AA2CA  2017.06    1233.700        NaN      F  Dollars
+  ...               ...      ...         ...        ...    ...      ...
+  5195     BDCQ.SF8RSCA  2020.09     470.454        NaN      F  Dollars
+  5196     BDCQ.SF8RSCA  2020.12     522.330        NaN      F  Dollars
+  5197     BDCQ.SF8RSCA  2021.03     597.997        NaN      F  Dollars
+  5198     BDCQ.SF8RSCA  2021.06     635.931        NaN      F  Dollars
+  5199     BDCQ.SF8RSCA  2021.09     439.138        NaN      F  Dollars
+
+        Magnitude                         Subject  \
+  0             6  Business Data Collection - BDC
+  1             6  Business Data Collection - BDC
+  2             6  Business Data Collection - BDC
+  3             6  Business Data Collection - BDC
+  4             6  Business Data Collection - BDC
+  ...         ...                             ...
+  5195          6  Business Data Collection - BDC
+  5196          6  Business Data Collection - BDC
+  5197          6  Business Data Collection - BDC
+  5198          6  Business Data Collection - BDC
+  5199          6  Business Data Collection - BDC
+
+                                                  Group  \
+  0     Industry by financial variable (NZSIOC Level 2)
+  1     Industry by financial variable (NZSIOC Level 2)
+  2     Industry by financial variable (NZSIOC Level 2)
+  3     Industry by financial variable (NZSIOC Level 2)
+  4     Industry by financial variable (NZSIOC Level 2)
+  ...                                               ...
+  5195  Industry by financial variable (NZSIOC Level 1)
+  5196  Industry by financial variable (NZSIOC Level 1)
+  5197  Industry by financial variable (NZSIOC Level 1)
+  5198  Industry by financial variable (NZSIOC Level 1)
+  5199  Industry by financial variable (NZSIOC Level 1)
+
+                  Series_title_1                       Series_title_2  \
+  0     Sales (operating income)                 Forestry and Logging
+  1     Sales (operating income)                 Forestry and Logging
+  2     Sales (operating income)                 Forestry and Logging
+  3     Sales (operating income)                 Forestry and Logging
+  4     Sales (operating income)                 Forestry and Logging
+  ...                        ...                                  ...
+  5195          Operating profit  Arts, Recreation and Other Services
+  5196          Operating profit  Arts, Recreation and Other Services
+  5197          Operating profit  Arts, Recreation and Other Services
+  5198          Operating profit  Arts, Recreation and Other Services
+  5199          Operating profit  Arts, Recreation and Other Services
+
+        Series_title_3 Series_title_4  Series_title_5
+  0     Current prices     Unadjusted             NaN
+  1     Current prices     Unadjusted             NaN
+  2     Current prices     Unadjusted             NaN
+  3     Current prices     Unadjusted             NaN
+  4     Current prices     Unadjusted             NaN
+  ...              ...            ...             ...
+  5195         Current     Unadjusted             NaN
+  5196         Current     Unadjusted             NaN
+  5197         Current     Unadjusted             NaN
+  5198         Current     Unadjusted             NaN
+  5199         Current     Unadjusted             NaN
+
+  [5200 rows x 14 columns]
+#+end_example
