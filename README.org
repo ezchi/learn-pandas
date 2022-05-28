@@ -689,3 +689,393 @@ Scatter Plot
 
 #+RESULTS:
 [[file:./.ob-jupyter/9eb4d617a14bad280520525ff7343096905a89c5.png]]
+
+
+** 10 Minutes to pandas
+:PROPERTIES:
+:header-args:jupyter-python+: :session "*10-mins-to-pandas*" :async yes :kernel python3 :display plain
+:END:
+[[https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html]]
+
+#+begin_src jupyter-python
+  import numpy as np
+  import pandas as pd
+#+end_src
+
+#+RESULTS:
+
+*** Object Creation
+#+begin_src jupyter-python
+  s = pd.Series([1, 3, 5, np.nan, 6, 8])
+
+  s
+#+end_src
+
+#+RESULTS:
+: 0    1.0
+: 1    3.0
+: 2    5.0
+: 3    NaN
+: 4    6.0
+: 5    8.0
+: dtype: float64
+
+Create DataFrame from NumPy array.
+#+begin_src jupyter-python
+  dates = pd.date_range("20130101", periods=6)
+
+  dates
+#+end_src
+
+#+RESULTS:
+: DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+:                '2013-01-05', '2013-01-06'],
+:               dtype='datetime64[ns]', freq='D')
+
+#+begin_src jupyter-python
+  df = pd.DataFrame(np.random.randn(6, 4), index=dates, columns=list("ABCD"))
+
+  df
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925
+: 2013-01-06  1.133956 -0.333554 -1.163325  0.183498
+
+#+begin_src jupyter-python
+  df2 = pd.DataFrame(
+      {
+          "A": 1.0,
+          "B": pd.Timestamp("20130102"),
+          "C": pd.Series(1, index=list(range(4)), dtype="float32"),
+          "D": np.array([3] * 4, dtype="int32"),
+          "E": pd.Categorical(["test", "train", "test", "train"]),
+          "F": "foo",
+      }
+  )
+
+  df2
+#+end_src
+
+#+RESULTS:
+:      A          B    C  D      E    F
+: 0  1.0 2013-01-02  1.0  3   test  foo
+: 1  1.0 2013-01-02  1.0  3  train  foo
+: 2  1.0 2013-01-02  1.0  3   test  foo
+: 3  1.0 2013-01-02  1.0  3  train  foo
+
+#+begin_src jupyter-python
+  df2.dtypes
+#+end_src
+
+#+RESULTS:
+: A           float64
+: B    datetime64[ns]
+: C           float32
+: D             int32
+: E          category
+: F            object
+: dtype: object
+
+*** Viewing Data
+#+begin_src jupyter-python
+  df.head()
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925
+
+#+begin_src jupyter-python
+  df.tail(3)
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925
+: 2013-01-06  1.133956 -0.333554 -1.163325  0.183498
+
+#+begin_src jupyter-python
+  df.index
+#+end_src
+
+#+RESULTS:
+: DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+:                '2013-01-05', '2013-01-06'],
+:               dtype='datetime64[ns]', freq='D')
+
+#+begin_src jupyter-python
+  df.describe()
+#+end_src
+
+#+RESULTS:
+:               A         B         C         D
+: count  6.000000  6.000000  6.000000  6.000000
+: mean  -0.211905  0.710987  0.320044  0.483101
+: std    1.553579  0.883115  1.141985  0.864432
+: min   -2.870319 -0.333554 -1.163325 -0.233489
+: 25%   -0.675838 -0.012101 -0.369718  0.110145
+: 50%   -0.040449  0.775277  0.166245  0.221808
+: 75%    0.845882  1.252804  1.063470  0.373172
+: max    1.426097  1.911502  1.936928  2.191925
+
+Transposing data.
+#+begin_src jupyter-python
+  df.T
+#+end_src
+
+#+RESULTS:
+:    2013-01-01  2013-01-02  2013-01-03  2013-01-04  2013-01-05  2013-01-06
+: A    1.426097   -0.062558   -0.018340   -2.870319   -0.880265    1.133956
+: B    0.653786    0.896769    1.371483    1.911502   -0.234064   -0.333554
+: C   -0.109477   -0.456465    1.936928    0.441967    1.270638   -1.163325
+: D    0.085695   -0.233489    0.410856    0.260119    2.191925    0.183498
+
+Sorting by axis:
+#+begin_src jupyter-python
+  df.sort_index(axis=1, ascending=False)
+#+end_src
+
+#+RESULTS:
+:                    D         C         B         A
+: 2013-01-01  0.085695 -0.109477  0.653786  1.426097
+: 2013-01-02 -0.233489 -0.456465  0.896769 -0.062558
+: 2013-01-03  0.410856  1.936928  1.371483 -0.018340
+: 2013-01-04  0.260119  0.441967  1.911502 -2.870319
+: 2013-01-05  2.191925  1.270638 -0.234064 -0.880265
+: 2013-01-06  0.183498 -1.163325 -0.333554  1.133956
+
+Sorting by values:
+#+begin_src jupyter-python
+  df.sort_values(by="B")
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-06  1.133956 -0.333554 -1.163325  0.183498
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119
+
+*** Getting Data
+Select single column:
+#+begin_src jupyter-python
+  df["A"]
+#+end_src
+
+#+RESULTS:
+: 2013-01-01    1.426097
+: 2013-01-02   -0.062558
+: 2013-01-03   -0.018340
+: 2013-01-04   -2.870319
+: 2013-01-05   -0.880265
+: 2013-01-06    1.133956
+: Freq: D, Name: A, dtype: float64
+
+Slice rows:
+#+begin_src jupyter-python
+  df[0:3]
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856
+
+Select by label (index):
+#+begin_src jupyter-python
+  df.loc[dates[0]]
+#+end_src
+
+#+RESULTS:
+: A    1.426097
+: B    0.653786
+: C   -0.109477
+: D    0.085695
+: Name: 2013-01-01 00:00:00, dtype: float64
+
+select multiple columns:
+#+begin_src jupyter-python
+  df.loc[:, ["A", "B"]]
+#+end_src
+
+#+RESULTS:
+:                    A         B
+: 2013-01-01  1.426097  0.653786
+: 2013-01-02 -0.062558  0.896769
+: 2013-01-03 -0.018340  1.371483
+: 2013-01-04 -2.870319  1.911502
+: 2013-01-05 -0.880265 -0.234064
+: 2013-01-06  1.133956 -0.333554
+
+Slicing selected columns:
+#+begin_src jupyter-python
+  df.loc["20130102":"20130104", ["A", "B"]]
+#+end_src
+
+#+RESULTS:
+:                    A         B
+: 2013-01-02 -0.062558  0.896769
+: 2013-01-03 -0.018340  1.371483
+: 2013-01-04 -2.870319  1.911502
+
+*** Select by position
+#+begin_src jupyter-python
+  df.iloc[3]
+#+end_src
+
+#+RESULTS:
+: A   -2.870319
+: B    1.911502
+: C    0.441967
+: D    0.260119
+: Name: 2013-01-04 00:00:00, dtype: float64
+
+Slice columns and rows:
+#+begin_src jupyter-python
+  df.iloc[[1,2,4], [0, 2]]
+#+end_src
+
+#+RESULTS:
+:                    A         C
+: 2013-01-02 -0.062558 -0.456465
+: 2013-01-03 -0.018340  1.936928
+: 2013-01-05 -0.880265  1.270638
+
+Select range of rows:
+#+begin_src jupyter-python
+  df.iloc[1:3,:]
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856
+
+Select range of columns:
+#+begin_src jupyter-python
+  df.iloc[:, 1:3]
+#+end_src
+
+#+RESULTS:
+:                    B         C
+: 2013-01-01  0.653786 -0.109477
+: 2013-01-02  0.896769 -0.456465
+: 2013-01-03  1.371483  1.936928
+: 2013-01-04  1.911502  0.441967
+: 2013-01-05 -0.234064  1.270638
+: 2013-01-06 -0.333554 -1.163325
+
+*** Boolean indexing
+#+begin_src jupyter-python
+  df["A"] > 0
+#+end_src
+
+#+RESULTS:
+: 2013-01-01     True
+: 2013-01-02    False
+: 2013-01-03    False
+: 2013-01-04    False
+: 2013-01-05    False
+: 2013-01-06     True
+: Freq: D, Name: A, dtype: bool
+
+#+begin_src jupyter-python
+  df[df["A"] > 0]
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695
+: 2013-01-06  1.133956 -0.333554 -1.163325  0.183498
+
+#+begin_src jupyter-python
+  df[df > 0]
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D
+: 2013-01-01  1.426097  0.653786       NaN  0.085695
+: 2013-01-02       NaN  0.896769       NaN       NaN
+: 2013-01-03       NaN  1.371483  1.936928  0.410856
+: 2013-01-04       NaN  1.911502  0.441967  0.260119
+: 2013-01-05       NaN       NaN  1.270638  2.191925
+: 2013-01-06  1.133956       NaN       NaN  0.183498
+
+#+begin_src jupyter-python
+  df2 = df.copy()
+
+  df2["E"] = ["one", "one", "two", "three", "four", "three"]
+
+  df2
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D      E
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695    one
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489    one
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856    two
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119  three
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925   four
+: 2013-01-06  1.133956 -0.333554 -1.163325  0.183498  three
+
+#+begin_src jupyter-python
+  df2[df2["E"].isin(["two", "four"])]
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D     E
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856   two
+: 2013-01-05 -0.880265 -0.234064  1.270638  2.191925  four
+
+*** Setting
+*** Missing data
+#+begin_src jupyter-python
+  df1 = df.reindex(index=dates[0:4], columns=list(df.columns) + ["E"])
+
+  df1.loc[dates[0]:dates[1], ["E"]] = 1
+
+  df1
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D    E
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695  1.0
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489  1.0
+: 2013-01-03 -0.018340  1.371483  1.936928  0.410856  NaN
+: 2013-01-04 -2.870319  1.911502  0.441967  0.260119  NaN
+
+#+begin_src jupyter-python
+  df1.dropna(how="any")
+#+end_src
+
+#+RESULTS:
+:                    A         B         C         D    E
+: 2013-01-01  1.426097  0.653786 -0.109477  0.085695  1.0
+: 2013-01-02 -0.062558  0.896769 -0.456465 -0.233489  1.0
+
+#+begin_src jupyter-python
+  pd.isna(df1)
+#+end_src
+
+#+RESULTS:
+:                 A      B      C      D      E
+: 2013-01-01  False  False  False  False  False
+: 2013-01-02  False  False  False  False  False
+: 2013-01-03  False  False  False  False   True
+: 2013-01-04  False  False  False  False   True
+
+*** Operations
